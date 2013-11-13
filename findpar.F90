@@ -1,4 +1,4 @@
-subroutine findpar(rho,pot, K1, K2, count, cput)
+subroutine findpar(rho,pot, K1, K2, count, cput, ns, nc)
   implicit none
   include 'param.h'
  
@@ -7,12 +7,12 @@ subroutine findpar(rho,pot, K1, K2, count, cput)
   
    double precision :: m, dr,pi,r,rho_2i,m_core,q,vol,presse, K1, K2, W, rcore,&
    pmax
-   integer :: i,j, count
+   integer :: i,j, count, ns ,nc
   
   character(len=100) :: img_file, info_file
   character*50 char_np1, char_nc, char_ns, char_np2, char_mu1, char_mu2, &
   char_rcore, char_mcore, char_m, char_q, char_vol, char_W, char_3P,&
-  char_pmax, char_count, char_cput
+  char_pmax, char_count, char_cput, char_K1,char_K2
 
   double precision :: cput
    
@@ -48,7 +48,7 @@ subroutine findpar(rho,pot, K1, K2, count, cput)
 	
   W=0.0
   do i=1,ns
-    r=(i-1.5)*dr
+    r=(i-0.5)*dr
     W=W-0.5*pot(i)*4*pi*r**2*rho(i)*dr
   enddo   	     
 
@@ -100,6 +100,8 @@ subroutine findpar(rho,pot, K1, K2, count, cput)
   write (char_count,"(I3)") count
   write (char_cput,"(F6.4)") cput
   write (char_rcore,"(F6.4)") rcore 
+  write (char_K1,"(F6.4)") K2 
+  write (char_K2,"(F6.4)") K2 
 
 !Write rho file  
   img_file='Bi_'//trim(char_nc)//"_"//trim(char_ns)//"_"//trim(char_np1)//'w'&
@@ -122,14 +124,11 @@ subroutine findpar(rho,pot, K1, K2, count, cput)
   " ",trim(char_m)," ",trim(char_q)," ",trim(char_vol)," ",trim(char_W)," ",&
   trim(char_3P)," ",trim(char_pmax)," ",trim(char_count)," ",trim(char_cput)
   close(10)  
+  
 
-  
-  
- 
-  
-  print*, "Mc = ", trim(char_mcore), "M = ",trim(char_m), "q = ", trim(char_q)
-  print*, "V = ", trim(char_vol), "3PI = ", trim(char_3P), "W = ", trim(char_W)
-   
+  open(unit=12,file='SC_HR.dat',access='APPEND')  
+    write(12,*) trim(char_rcore)," ", trim(char_q)
+  close(12)
   
   
   print*,"================================SUMMARY===================================="
@@ -139,9 +138,10 @@ subroutine findpar(rho,pot, K1, K2, count, cput)
   print*, "Core mass fraction = ", trim(char_q)
   print*,"Resolution = ", trim(char_ns)
   print*,"Core Resolution = ", trim(char_nc)  
-  print*,"  rcore  ","  M     ", "  V   ","    -W   ","  3PI  ","   P_max  "
+  print*,"  rcore  ","  M     ", "  V   ","    -W   ","  3PI  ","   P_max  ","   K1   "&
+  ,"   K2   "
   print*,trim(char_rcore),"   ",trim(char_m),"  ", trim(char_vol),"  ",trim(char_W)&
-  ,"  ",trim(char_3P),"  ",trim(char_pmax)
+  ,"  ",trim(char_3P),"  ",trim(char_pmax),"  ",trim(char_K1),"  ",trim(char_K2)
   
   print*,"cpu time =", trim(char_cput) , " min"
   

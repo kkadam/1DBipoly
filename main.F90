@@ -1,16 +1,43 @@
 program main
   implicit none
+  integer:: ns,nc, i
+  double precision :: cpu1, cpu2, cput
+  
+  call cpu_time(cpu1)  
+  
+  i=1
+  ns=5001
+  
+  do nc=480,540, 2	 
+    call engine (ns,nc)
+    
+  enddo
+  
+  call cpu_time(cpu2)
+  cput=(cpu2-cpu1)/60.0
+  
+  print*, "Total time = ", cput
+  
+end program main 
+
+
+
+
+
+subroutine engine(ns,nc)
+  implicit none
   include 'param.h'
   double precision :: a, G, Rho_0, gamma1, gamma2, rc, dR, K1, K2, C, Phi_s, Phi_c , C1
   double precision :: Rho1_c, Rho2_c, deltaC, prevC, deltaK1,k1old, deltaK2, k2old
   double precision, allocatable :: R1(:), R2(:), R(:), Rho1(:), Rho2(:), Rho(:)
   double precision, allocatable :: Phi(:), x(:), H1(:), H2(:), H(:)
-  integer :: i , conv,counter,n1,n2
+  integer :: i , conv,counter,n1,n2, ns,nc
   double precision :: cpu1, cpu2, cput
   
   print*,"===========================================================================" 
   print*, "SCF started!"
-
+  
+  
   call cpu_time(cpu1)  
   
   a=1
@@ -57,8 +84,7 @@ program main
     Rho2(i)=Rho(N1+i-1)
   enddo
      
-!  call printdefault(rho)
-!  call findpar(rho,2.27, 0.30)
+
   counter=1
   deltaK1=1.0
   deltaK2=1.0 
@@ -67,7 +93,7 @@ program main
 !!!!Iterate Till Convergence!!!!!!!!!  
   do while ((deltaK1.gt.1d-4).and.(deltaK2.gt.1d-4))
 !      call mass_solve(rho,phi)
-      call poisson_solve(rho,phi)
+      call poisson_solve(rho,phi,ns, nc)
       
       phi_c=phi(N1)
       phi_s=phi(Ns)
@@ -126,8 +152,8 @@ program main
   cput=(cpu2-cpu1)/60.0
   
 
-  call findpar(rho,phi,K1,K2,counter,cput)
+  call findpar(rho,phi,K1,K2,counter,cput,ns, nc)
  
-end program main  
+end subroutine engine 
   
 

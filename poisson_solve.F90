@@ -1,12 +1,13 @@
-subroutine poisson_solve(rho,phi)
+subroutine poisson_solve(rho,phi,ns,nc)
   implicit none
   include 'param.h'
-  double precision :: rho(ns), phi(ns)             !!!Change
+  
   double precision :: a, G, K, gamma, deltac,xl,xr, C
   double precision, allocatable :: x(:),dphi(:)
-  integer :: n,i,test, count
+  integer :: n,i,test, count, ns,nc
   double precision :: h  
 
+  double precision :: rho(ns), phi(ns)             !!!Change
 
   
   n=ns       !!!Change
