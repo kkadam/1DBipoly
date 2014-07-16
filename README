@@ -10,13 +10,11 @@ Required:
 
    
 How to use:
-1. Specify relevant parameters in file 
+1. Specify relevant parameters in file param.h
 2. Do:
-   >> make clean
+   >> make cl
    >> make
-   >> ./scf
+   >> ./bipoly
    
 Note:
-Code is also known as corrected SCF code. The very first attempt at creating biplytropic binary
-had some issues with convergence. Patrick Motl provided me with this version of SCF which used
-different Poisson solver, and it works.
+File ana.F90 contains analytical solution which exists for n1=5 and n2=1 case.
