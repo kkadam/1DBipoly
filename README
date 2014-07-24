@@ -18,3 +18,4 @@ How to use:
    
 Note:
 File ana.F90 contains analytical solution which exists for n1=5 and n2=1 case.
+File loop_ana.F90 produces Schönberg–Chandrasekhar nu-q diagrams for given ratio of molecular weights.
